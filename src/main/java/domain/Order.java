@@ -11,32 +11,36 @@ import java.util.List;
 
 @Entity
 @Table(name = "orders")
-@Getter @Setter
+@Getter
+@Setter
 public class Order {
 
-    @Id
-    @GeneratedValue
-    @Column(name = "order_id")
-    private Long id;
+  @Id
+  @GeneratedValue
+  @Column(name = "order_id")
+  private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "product_id")
+  private Product product;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "buyer_id")
-    private User user;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "buyer_id")
+  private User user;
 
-    @NotEmpty private Date date;
-    @NotEmpty private int order_quantity;
-    @NotEmpty private int order_price;
+  @OneToOne(mappedBy = "order", fetch = FetchType.LAZY)
+  private Delivery delivery;
 
-    @Enumerated(EnumType.STRING)
-    private OrderStatus orderStatus;
+  @NotEmpty
+  private Date date;
+  @NotEmpty
+  private int order_quantity;
+  @NotEmpty
+  private int order_price;
 
-    @Enumerated(EnumType.STRING)
-    private Payment payment;
+  @Enumerated(EnumType.STRING)
+  private OrderStatus orderStatus;
 
-    @OneToMany(mappedBy = "order")
-    private List<Delivery> deliveries = new ArrayList<>();
+  @Enumerated(EnumType.STRING)
+  private Payment payment;
 }
