@@ -26,7 +26,7 @@ public class Order {
     @JoinColumn(name = "buyer_id")
     private User user;
 
-    @OneToOne(mappedBy = "order", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Delivery delivery;
 
     @NotEmpty

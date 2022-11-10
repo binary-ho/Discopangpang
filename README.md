@@ -151,9 +151,11 @@ public class Product {
 ```
 1. 외래키로 user의 id를 참조하고 있다. 컬럼에선 `seller_id`로 나타난다. 
 2. 이를 `@JoinCoulumn`으로 나타내었다.
-3. 유저와 판매 물건은 `@ManyToOne`관계이다. 한 판매자는 여러 물건을 판매 등록할 수 있다.
-4. 비어있으면 안 되는 필드들에 `@NotEmpty`를 달아 주었다.
-5. 한 물건은 여러 주문건에 속해있을 수 있다. 이에, order와 `@OneToMany` 관계를 설정해 주었다.
+3. User는 Product와 1:다 관계이므로, 외래키는 Product에 있다. **따라서 Product가 연관 관계의 주인이다!**
+      이에, `@JoinCoulumn`가 User에 걸렸고, Product에는 `Mapped By`가 걸렸다.
+4. 유저와 판매 물건은 `@ManyToOne`관계이다. 한 판매자는 여러 물건을 판매 등록할 수 있다.
+5. 비어있으면 안 되는 필드들에 `@NotEmpty`를 달아 주었다.
+6. 한 물건은 여러 주문건에 속해있을 수 있다. 이에, order와 `@OneToMany` 관계를 설정해 주었다.
 
 ### 3. Order Entity
 ```java
@@ -175,7 +177,7 @@ public class Order {
   @JoinColumn(name = "buyer_id")
   private User user;
 
-  @OneToOne(mappedBy = "order", fetch = FetchType.LAZY)
+  @OneToOne(mappedBy = "order", fetch = FetchType.LAZY,  cascade = CascadeType.ALL)
   private Delivery delivery;
 
   @NotEmpty private Date date;
@@ -192,7 +194,8 @@ public class Order {
 1. `@Table(name = "orders")`를 통해 테이블 이름을 orders로 해주었다. 표준 SQL `ORDER BY` 명령어의 존재로 테이블의 이름이 order인 경우 실수나 오류가 발생할 수도 있기 떄문이다.
 2. product의 id와 user의 id를 각각 `@JoinColumn`을 통해 `product_id`, `buyer_id`로 가져오고 있다.
 3. Delivery와 1대 1 관계를 갖는다. 하나의 주문에는 하나의 배송이 있다. 이 떄, 주문이 우선으로 배송이 관계의 주인이 된다.
-4. 주문 상태와 결제 수단은 `@Enumerated`로 enum으로 구성해주었다.
+4. **Order가 지워질 경우 Delivery를 삭제한다.** `@OneToOne(cascade = CascadeType.ALL, ...)` Order에 있는 이유는, 주문이 사라지면 배송건도 사라지는게 자연스럽고, **배송이 어쩌다 삭제 되는 에러가 발생해도, 주문이 남아 있는 것이 자연스럽고 복구에도 적절하다.**
+5. 주문 상태와 결제 수단은 `@Enumerated`로 enum으로 구성해주었다.
 
 ### 4. Delivery Entity
 ```java
@@ -205,7 +208,7 @@ public class Delivery {
     @Column(name = "delivery_id")
     private Long id;
     
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
     
@@ -230,8 +233,8 @@ public class Delivery {
 }
 ```
 1. User의 id를 2개 가져오고 있다. `@JoinColumn`을 통해서 쉽게 처리할 수 있었다. `@JoinColumn`의 대략적인 동작을 이해해야 구현 가능하다. `@JoinColumn`는 객체 안에서 알아서 PK값을 찾아 참조해주는 마법을 부린다.
-2. Delivery는 Order와 1:1이고, 외래키는 Delivery에 있다. **따라서 Delivery과 연관 관계의 주인이다!**
-그래서 Delivery와 Order의 관계에서 CASACADE는 Delivery에 걸리게 된다.
 ## 5. 엔티티 비즈니스 로직
 한 엔티티의 필드만을 직접 조작하거나, 아무렇게나 생성해서는 안 되는 경우, <br> 
 엔티티 안에 비즈니스 로직을 넣어줄 수 있다.
+
+[comment]: <> (연관관계 주인 다시 보기.)
