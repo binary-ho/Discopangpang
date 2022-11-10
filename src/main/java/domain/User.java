@@ -19,10 +19,14 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
-    @NotEmpty private String name;
-    @NotEmpty private String email;
-    @NotEmpty private String contact;
-    @NotEmpty private String password;
+    @NotEmpty
+    private String name;
+    @NotEmpty
+    private String email;
+    @NotEmpty
+    private String contact;
+    @NotEmpty
+    private String password;
 
     @Embedded
     private Address address;

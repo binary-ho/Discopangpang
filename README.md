@@ -199,39 +199,39 @@ public class Order {
 @Entity
 @Getter @Setter
 public class Delivery {
-
-  @Id
-  @GeneratedValue
-  @Column(name = "delivery_id")
-  private Long id;
-
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "order_id")
-  private Order order;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "buyer_id")
-  private User buyer;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "seller_id")
-  private User seller;
-
-  @Embedded
-  private Address receive_address;
-
-  @NotEmpty private Date send_date;
-  @NotEmpty private Date receive_date;
-
-  @Enumerated(EnumType.STRING)
-  private DeliveryStatus deliveryStatus;
-
-  @NotEmpty private String delivery_details;
+    
+    @Id
+    @GeneratedValue
+    @Column(name = "delivery_id")
+    private Long id;
+    
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "order_id")
+    private Order order;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "buyer_id")
+    private User buyer;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_id")
+    private User seller;
+    
+    @Embedded
+    private Address receive_address;
+    
+    @NotEmpty private Date send_date;
+    @NotEmpty private Date receive_date;
+    
+    @Enumerated(EnumType.STRING)
+    private DeliveryStatus deliveryStatus;
+    
+    @NotEmpty private String delivery_details;
 }
 ```
-가장 복잡해 보이지만, 가장 구성이 간단하다.
 1. User의 id를 2개 가져오고 있다. `@JoinColumn`을 통해서 쉽게 처리할 수 있었다. `@JoinColumn`의 대략적인 동작을 이해해야 구현 가능하다. `@JoinColumn`는 객체 안에서 알아서 PK값을 찾아 참조해주는 마법을 부린다.
-
+2. Delivery는 Order와 1:1이고, 외래키는 Delivery에 있다. **따라서 Delivery과 연관 관계의 주인이다!**
+그래서 Delivery와 Order의 관계에서 CASACADE는 Delivery에 걸리게 된다.
 ## 5. 엔티티 비즈니스 로직
 한 엔티티의 필드만을 직접 조작하거나, 아무렇게나 생성해서는 안 되는 경우, <br> 
 엔티티 안에 비즈니스 로직을 넣어줄 수 있다.

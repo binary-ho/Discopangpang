@@ -17,7 +17,7 @@ public class Delivery {
     @Column(name = "delivery_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
     private Order order;
 
