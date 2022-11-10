@@ -32,4 +32,13 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Product> sellingProducts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders = new ArrayList<>();
+
+    @OneToMany(mappedBy = "buyer")
+    private List<Delivery> waitingDeliveries = new ArrayList<>();
+
+    @OneToMany(mappedBy = "seller")
+    private List<Delivery> sendDeliveries = new ArrayList<>();
 }

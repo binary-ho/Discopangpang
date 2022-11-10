@@ -61,4 +61,7 @@ MySQL을 이용해 DB 설계를 공부하기 위한 프로젝트 <br>
 
 ## 3. ER Diagram 그려보기
 ![discopangpangerd](https://user-images.githubusercontent.com/71186266/200966471-2501173d-4af0-43fb-9920-1be21d2d24d9.png)
+
+<br>
+
 위에서 그려본 관계모델을 통해 ER Diagram을 그려봤다.
