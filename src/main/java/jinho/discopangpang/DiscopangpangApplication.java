@@ -6,8 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class DiscopangpangApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(DiscopangpangApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(DiscopangpangApplication.class, args);
+    }
 }

@@ -41,4 +41,10 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     private Payment payment;
+
+    // TODO
+    public static Order createOrder(User user, Delivery delivery, Product... products) {
+        Order order = new Order();
+        return order;
+    }
 }

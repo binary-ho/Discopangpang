@@ -1,5 +1,6 @@
 package domain;
 
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +14,7 @@ import java.util.Date;
 public class Delivery {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue()
     @Column(name = "delivery_id")
     private Long id;
 
@@ -32,11 +33,14 @@ public class Delivery {
     @Embedded
     private Address receive_address;
 
-    @NotEmpty private Date send_date;
-    @NotEmpty private Date receive_date;
+    @NotEmpty
+    private Date send_date;
+    @NotEmpty
+    private Date receive_date;
 
     @Enumerated(EnumType.STRING)
     private DeliveryStatus deliveryStatus;
 
-    @NotEmpty private String delivery_details;
+    @NotEmpty
+    private String delivery_details;
 }
