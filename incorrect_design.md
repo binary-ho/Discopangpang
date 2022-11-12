@@ -1,0 +1,15 @@
+## 실패한 디자인들
+![discopangpanhrel0](https://user-images.githubusercontent.com/71186266/201459524-88b060d5-8da7-49a0-865d-56450fb58d5a.jpg)
+- 집단화는 부적절하다. 배송은 '주문'과 연관 되어야한다. 일련의 주문과정 전체와 연관될 필요가 없다! 과정 전체와 관련된 attribute가 필요할 떄만 집단화를 해주는 것이 맞다.
+
+<br> <br>
+
+![KakaoTalk_20221110_164357170_04](https://user-images.githubusercontent.com/71186266/201029925-85c278b9-a794-47c8-8360-18e97fe3f40a.jpg)
+- 이렇게 되면 주문 하나에 한 제품 밖에 참여 못 한다. 여러 제품이 참여할 수 있어야한다.
+
+<br> <br>
+
+
+![discopangpangerd](https://user-images.githubusercontent.com/71186266/200966471-2501173d-4af0-43fb-9920-1be21d2d24d9.png)
+
+- 위와 같은 오류

@@ -15,11 +15,11 @@ public class Order {
 
     @Id
     @GeneratedValue
-    @Column(name = "order_id")
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "delivery_id")
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)

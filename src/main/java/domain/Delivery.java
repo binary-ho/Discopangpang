@@ -15,7 +15,7 @@ public class Delivery {
 
     @Id
     @GeneratedValue()
-    @Column(name = "delivery_id")
+    @Column(name = "id")
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
