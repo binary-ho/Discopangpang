@@ -270,12 +270,6 @@ public class Order {
 
       @OneToMany
       private List<Bundle> orderBundles;
-
-      // TODO
-      public static Order createOrder(User user, Delivery delivery, Product... products) {
-            Order order = new Order();
-            return order;
-      }
 }
 ```
 1. `@Table(name = "orders")`를 통해 테이블 이름을 orders로 해주었다. 표준 SQL `ORDER BY` 명령어의 존재로 테이블의 이름이 order인 경우 실수나 오류가 발생할 수도 있기 떄문이다.
