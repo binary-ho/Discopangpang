@@ -1,7 +1,7 @@
 # Discopangpang
 MySQL을 이용해 DB 설계를 공부하기 위한 프로젝트 <br>
-코피팡팡 <br>
-쿠팡의 DB를 관계 모델 부터 ER Diagram, 그리고 Spring Entity까지 설계해보는 프로젝트입니다. <br>
+쿠팡의 DB를 관계 모델 부터 ER Diagram, 그리고 Spring Entity까지 설계해보는 프로젝트 디스코팡팡입니다!. 
+(with google java style guide) <br>
 
 **화면 보며 DB 테이블 분석하기 -> 관계 모델 그려보기 -> ER 다이어그램 그려보기 -> 엔티티 구현 -> 비즈니스 로직 구현 -> 화면 구현**
 
@@ -114,9 +114,14 @@ Order가 Product의 id를 가지고 있었는데, 이건 절대 일-대-다 관�
 이에, 강의 내용과 유사하게 **다-대-다 관계를 일-대-다, 다-대-일 관계로 완화시켜 줄 Bundle 엔티티를 도입했다.** <br>
 결국 강의에서 보여준 예시와 비슷한 구성이 되었으나 더 적절한 관계를 짜게 되었다. <br>
 
-(유저와 물품이 관계를 맺는다는 점과, 관계 모델, ER Diagram을 세세하게 짠다는 점이 강의와의 차별점이기는 하다 ㅠㅠ) <br>
+(테이블 간의 관계가 다른 면이 꽤 있고.. 관계 모델, ER Diagram을 세세하게 짠다는 점이 강의와의 차별점이기는 하다 ㅠㅠ) <br>
 
-[comment]: <> (@XToOne&#40;OneToOne, ManyToOne&#41; 관계는 기본이 즉시로딩이므로 직접 지연로딩으로 설정해야 한다.)
+
+### 4.4 How to Generate the Primary Key Value
+처음에는 강의와 같이 AI로 만들어 주었으나, Url에 pk가 유출되는 요소들은, AI를 쓰지 말아야 한다는 사실을 후에 배우게 되었다.
+예를 들어 유저의 경우, 경쟁사들이 숫자를 대입하며 손쉽게 전체 가입자 수를 유추할 수가 있게 된다. <br>
+
+따라서, url에 id가 노출될 경우 예민할 수 있는 유저, 주문, 배송 Entity에 한해 UUID 정책으로 id값을(PK) 정해 주었다. 
 
 <details>
 <summary> <b>버리기 아까워서 올리는 실패한 설계들 모음</b> </summary>
@@ -139,7 +144,7 @@ Order가 Product의 id를 가지고 있었는데, 이건 절대 일-대-다 관�
 각 엔티티 코드 아래의 설명은 꼭 필요한 것만 적겠다. 이전 엔티티에서 설명한 개념은 생략한다. <br>
 
 `@Setter`를 전체적으로 사용하였는데, 실제 구현에서는 이렇게 하면 안 된다. <br>
-본 프로젝트는 복잡한 관계 모델을 직접 엔티티로 구현하는 것에 의의를 두었다.
+본 프로젝트는 복잡한 관계 모델을 직접 엔티티로 구현하는 것에 의의를 두었다. 
 
 ### 1. User Entity
 ```java
@@ -147,88 +152,86 @@ Order가 Product의 id를 가지고 있었는데, 이건 절대 일-대-다 관�
 @Getter
 @Setter
 public class User {
-      @Entity
-      @Getter
-      @Setter
-      public class User {
 
-            @Id
-            @GeneratedValue
-            private Long id;
+      @Id
+      @GeneratedValue(generator = "uuid2")
+      @GenericGenerator(name = "uuid2", strategy = "uuid2")
+      private Long id;
 
-            @NotEmpty
-            private String name;
-            @NotEmpty
-            private String email;
-            @NotEmpty
-            private String contact;
-            @NotEmpty
-            private String password;
+      @NotEmpty
+      private String name;
+      @NotEmpty
+      private String email;
+      @NotEmpty
+      private String contact;
+      @NotEmpty
+      private String password;
 
-            @Embedded
-            private Address address;
+      @Embedded
+      private Address address;
 
-            @Enumerated(EnumType.STRING)
-            private Membership membership;
+      @Enumerated(EnumType.STRING)
+      private Membership membership;
 
-            @OneToMany(mappedBy = "user")
-            private List<Product> sellingProducts = new ArrayList<>();
+      @OneToMany(mappedBy = "user")
+      private List<Product> sellingProducts = new ArrayList<>();
 
-            @OneToMany(mappedBy = "user")
-            private List<Order> orders = new ArrayList<>();
+      @OneToMany(mappedBy = "user")
+      private List<Order> orders = new ArrayList<>();
 
-            @OneToMany(mappedBy = "buyer")
-            private List<Delivery> waitingDeliveries = new ArrayList<>();
+      @OneToMany(mappedBy = "buyer")
+      private List<Delivery> waitingDeliveries = new ArrayList<>();
 
-            @OneToMany(mappedBy = "seller")
-            private List<Delivery> sentDeliveries = new ArrayList<>();
-      }
+      @OneToMany(mappedBy = "seller")
+      private List<Delivery> sentDeliveries = new ArrayList<>();
 }
 ```
-2. 비어있으면 안 되는 정보들에 대해 `@NotEmpty`를 걸어 주었다.
-3. Address와 같은 요소는 따로 객체를 만들어서 `@Embedded` 해주었다.
-4. `@Enumerated`를 통해 맴버쉽 상태를 구현했다.
-#### 5. user를 매핑하는 곳들을 전부 user에서 조회할 수 있는 처리를 해 주었다. 
-이런 처리를 해준 경우, 주의해야 할 점이 있다. <br> 
+1. 비어있으면 안 되는 정보들에 대해 `@NotEmpty`를 걸어 주었다.
+2. Address와 같은 요소는 따로 객체를 만들어서 `@Embedded` 해주었다.
+3. `@Enumerated`를 통해 맴버쉽 상태를 구현했다.
+#### 4. user에서 파는 물건, 주문한 주문건들, 배송을 기다리는 물품, 발송한 물품등을 조회 가능하게 만들어 주었다.
+전부 리스트의 형태로 가지고 있는데, 이런 처리를 해준 경우, 주의해야 할 점이 있다. <br> 
 API를 구현 할 떄, Entity를 직접 노출시키지 않고, DTO를 사용해야 한다는 점이다. <br>
-불필요한 리스트들이 전부 조회될 수 있다. `@JsonIgnore` 어노테이션을 통해 나가지 않게 해줄 수 있지만, DTO의 사용은 다른 장점도 있기 떄문에, 그냥 후에 DTO를 도입함으로서 처리해주겠다.
-
-6. 유저와 유저의 주문들, 유저와 배송을 기다리는 물건들은 `@OneToMany`관계를 가지고 있다.
-7. 판매자와 판매 물건, 발송한 물건들은 `@OneToMany`관계를 가지고 있다.
-
+불필요한 리스트들이 전부 조회될 수 있다. 이는 원하는 상황도 아니고, 4개의 리스트가 한번에 딸려 나가므로 무겁다. <br>
+`@JsonIgnore` 어노테이션을 통해 나가지 않게 해줄 수 있지만, DTO의 사용은 다른 장점도 있기 떄문에, 그냥 후에 DTO를 도입함으로서 처리해주겠다.
 
 ### 2. Product Entity
 판매자가 판매하는 물건들에 대한 엔티티
 ```java
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 public class Product {
 
-    @Id @GeneratedValue
-    @Column(name = "product_id")
-    private Long id;
+      @Id
+      @GeneratedValue
+      private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id")
-    private User user;
+      @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+      @JoinColumn(name = "seller_id")
+      private User user;
 
-    @NotEmpty private String product_name;
-    private String product_photo_url;
-    private String review;
-    @NotEmpty private int product_price;
-    @NotEmpty private int stock;
-    private int option_price;
-    private String product_details;
+      @NotEmpty
+      private String name;
 
-    @OneToMany(mappedBy = "product")
-    private List<Order> orders = new ArrayList<>();
+      private String photo_url;
+      private String review;
+
+      @NotEmpty
+      private int price;
+
+      @NotEmpty
+      private int stock;
+
+      private int option_price;
+      private String details;
 }
 ```
-1. 외래키로 user의 id를 참조하고 있다. 컬럼에선 `seller_id`로 나타난다. 
-2. 이를 `@JoinCoulumn`으로 나타내었다.
-3. User는 Product와 1:다 관계이므로, 외래키는 Product에 있다. **따라서 Product가 연관 관계의 주인이다!**
-      이에, `@JoinCoulumn`가 User에 걸렸고, Product에는 `Mapped By`가 걸렸다.
-4. 유저와 판매 물건은 `@ManyToOne`관계이다. 한 판매자는 여러 물건을 판매 등록할 수 있다.
+1. 외래키로 user의 id를 참조하고 있다. 컬럼에선 `seller_id`로 나타난다. 이를 `@JoinCoulumn`으로 나타내었다.
+2. User는 Product와 1:다 관계이므로, 외래키는 Product에 있다. **따라서 Product가 연관 관계의 주인이다!**
+      이에, Product table에 user의 id가 오게 되므로, `@JoinCoulumn`가 User에 걸렸고, <br> User에 있는 Product list인 `sellingProducts`에는 `Mapped By`가 걸렸다.
+3. 판매 물건과 유저는 `@ManyToOne`관계이다. 한 판매자는 여러 물건을 판매 등록할 수 있다.
+4. `OneToOne`과 `@ManyToOne`은 기본적으로 Eager fetch이다. eager한 fetch는 추적이 어렵고 JPA에서 N+1 문제를 유발 할 수 있기 때문에 LAZY하게 바꾸어 주었다.
 5. 비어있으면 안 되는 필드들에 `@NotEmpty`를 달아 주었다.
 6. 한 물건은 여러 주문건에 속해있을 수 있다. 이에, order와 `@OneToMany` 관계를 설정해 주었다.
 
@@ -236,81 +239,126 @@ public class Product {
 ```java
 @Entity
 @Table(name = "orders")
-@Getter @Setter
+@Getter
+@Setter
 public class Order {
 
-  @Id
-  @GeneratedValue
-  @Column(name = "order_id")
-  private Long id;
+      @Id
+      @GeneratedValue(generator = "uuid2")
+      @GenericGenerator(name = "uuid2", strategy = "uuid2")
+      private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_id")
-  private Product product;
+      @ManyToOne(fetch = FetchType.LAZY)
+      @JoinColumn(name = "buyer_id")
+      private User user;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "buyer_id")
-  private User user;
+      @OneToOne(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+      @JoinColumn(name = "delivery_id")
+      private Delivery delivery;
 
-  @OneToOne(mappedBy = "order", fetch = FetchType.LAZY,  cascade = CascadeType.ALL)
-  private Delivery delivery;
+      @NotEmpty
+      private Date date;
 
-  @NotEmpty private Date date;
-  @NotEmpty private int order_quantity;
-  @NotEmpty private int order_price;
+      @Enumerated(EnumType.STRING)
+      private OrderStatus orderStatus;
 
-  @Enumerated(EnumType.STRING)
-  private OrderStatus orderStatus;
+      @NotEmpty
+      private int totalAmount;
 
-  @Enumerated(EnumType.STRING)
-  private Payment payment;
+      @Enumerated(EnumType.STRING)
+      private Payment payment;
+
+      @OneToMany
+      private List<Bundle> orderBundles;
+
+      // TODO
+      public static Order createOrder(User user, Delivery delivery, Product... products) {
+            Order order = new Order();
+            return order;
+      }
 }
 ```
 1. `@Table(name = "orders")`를 통해 테이블 이름을 orders로 해주었다. 표준 SQL `ORDER BY` 명령어의 존재로 테이블의 이름이 order인 경우 실수나 오류가 발생할 수도 있기 떄문이다.
-2. product의 id와 user의 id를 각각 `@JoinColumn`을 통해 `product_id`, `buyer_id`로 가져오고 있다.
+2. product의 pk 값과 user의 pk 값을 각각 `@JoinColumn`을 통해 `product_id`, `buyer_id`로 가져오고 있다.
 3. Delivery와 1대 1 관계를 갖는다. 하나의 주문에는 하나의 배송이 있다. 이 떄, 주문이 우선으로 배송이 관계의 주인이 된다.
 4. **Order가 지워질 경우 Delivery를 삭제한다.** `@OneToOne(cascade = CascadeType.ALL, ...)` Order에 있는 이유는, 주문이 사라지면 배송건도 사라지는게 자연스럽고, **배송이 어쩌다 삭제 되는 에러가 발생해도, 주문이 남아 있는 것이 자연스럽고 복구에도 적절하다.**
 5. 주문 상태와 결제 수단은 `@Enumerated`로 enum으로 구성해주었다.
 
-### 4. Delivery Entity
+### 4. Bundle Entity
 ```java
 @Entity
-@Getter @Setter
-public class Delivery {
-    
+@Getter
+@Setter
+@NotEmpty
+public class Bundle {
+
     @Id
     @GeneratedValue
-    @Column(name = "delivery_id")
     private Long id;
-    
-    @OneToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
     private Order order;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "buyer_id")
-    private User buyer;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id")
-    private User seller;
-    
-    @Embedded
-    private Address receive_address;
-    
-    @NotEmpty private Date send_date;
-    @NotEmpty private Date receive_date;
-    
-    @Enumerated(EnumType.STRING)
-    private DeliveryStatus deliveryStatus;
-    
-    @NotEmpty private String delivery_details;
+
+    private int quantity;
+    private int bundleAmount;
 }
 ```
-1. User의 id를 2개 가져오고 있다. `@JoinColumn`을 통해서 쉽게 처리할 수 있었다. `@JoinColumn`의 대략적인 동작을 이해해야 구현 가능하다. `@JoinColumn`는 객체 안에서 알아서 PK값을 찾아 참조해주는 마법을 부린다.
-## 5. 엔티티 비즈니스 로직
+1. Product와 Order는 **다대다 관계를 가졌다.** 다대다 관계는 테이블을 구성할 때 PK값이 명확하지 않은 등의 문제가 많으므로 중간에 완화 시켜줄 Bundle을 도입했다.
+2. 실생활에도 이것이 자연스럽다. 한 주문에 여러 종류의 물건이 1개 이상 참여하고, 한 물건은 다양한 주문건에 다양한 갯수로 참여 가능하니, 중간에 엔티티를 하나 더 도입해줬다.
+3. 이에 Product와 Order에 대해 일대다의 관계를 가지게 되어서 Bundle Entitiy에 둘의 id가 필드로 들어왔다.
+
+### 5. Delivery Entity
+```java
+@Entity
+@Getter
+@Setter
+public class Delivery {
+
+      @Id
+      @GeneratedValue(generator = "uuid2")
+      @GenericGenerator(name = "uuid2", strategy = "uuid2")
+      private Long id;
+
+      @OneToOne(fetch = FetchType.LAZY)
+      @JoinColumn(name = "order_id")
+      private Order order;
+
+      @ManyToOne(fetch = FetchType.LAZY)
+      @JoinColumn(name = "buyer_id")
+      private User buyer;
+
+      @ManyToOne(fetch = FetchType.LAZY)
+      @JoinColumn(name = "seller_id")
+      private User seller;
+
+      @Embedded
+      private Address receive_address;
+
+      @NotEmpty
+      private Date send_date;
+      @NotEmpty
+      private Date receive_date;
+
+      @Enumerated(EnumType.STRING)
+      private DeliveryStatus deliveryStatus;
+
+      @NotEmpty
+      private String delivery_details;
+}
+```
+1. User의 id를 2개 가져오고 있다. `@JoinColumn`을 통해서 쉽게 처리할 수 있었다. 이는 `@JoinColumn`의 대략적인 동작을 알면 이해가 빠른데, `@JoinColumn`는 객체 안에서 알아서 PK 값을 찾아 참조해주는 마법을 부린다.
+
+
+## 5. 엔티티 비즈니스 로직 (도입 예정)
+여기까지는 기본적인 엔티티를 구성하는 작업이였다. <br>
 한 엔티티의 필드만을 직접 조작하거나, 별도의 생성 메서드가 필수인 경우, <br> 
-엔티티 안에 비즈니스 로직을 넣어줄 수 있다.
+엔티티 안에 비즈니스 로직을 넣어줄 수 있다. <br>
+조금만 더 배우고 나서 도입할 예정이다
 
 [comment]: <> (연관관계 주인 다시 보기.)
 [comment]: <> (UUID랑 OrderItems를 도입해야 한다 ㅠㅠ)

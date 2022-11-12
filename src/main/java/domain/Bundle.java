@@ -31,7 +31,5 @@ public class Bundle {
     private Order order;
 
     private int quantity;
-
-    @Column(name = "bundle_amount")
     private int bundleAmount;
 }
