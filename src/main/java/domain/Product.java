@@ -16,24 +16,24 @@ public class Product {
 
     @Id
     @GeneratedValue
-    @Column(name = "product_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "seller_id")
     private User user;
 
     @NotEmpty
-    private String product_name;
-    private String product_photo_url;
+    private String name;
+
+    private String photo_url;
     private String review;
+
     @NotEmpty
-    private int product_price;
+    private int price;
+
     @NotEmpty
     private int stock;
-    private int option_price;
-    private String product_details;
 
-    @OneToMany(mappedBy = "product")
-    private List<Order> orders = new ArrayList<>();
+    private int option_price;
+    private String details;
 }

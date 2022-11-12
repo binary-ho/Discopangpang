@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Getter
@@ -15,8 +16,8 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue
-    @Column(name = "user_id")
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
     private Long id;
 
     @NotEmpty
@@ -44,5 +45,5 @@ public class User {
     private List<Delivery> waitingDeliveries = new ArrayList<>();
 
     @OneToMany(mappedBy = "seller")
-    private List<Delivery> sendDeliveries = new ArrayList<>();
+    private List<Delivery> sentDeliveries = new ArrayList<>();
 }

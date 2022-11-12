@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.util.Date;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Getter
@@ -14,8 +15,8 @@ import java.util.Date;
 public class Delivery {
 
     @Id
-    @GeneratedValue()
-    @Column(name = "id")
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)

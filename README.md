@@ -1,7 +1,13 @@
 # Discopangpang
 MySQL을 이용해 DB 설계를 공부하기 위한 프로젝트 <br>
 코피팡팡 <br>
-쿠팡의 DB를 관계 모델 부터 ER Diagram, 그리고 Spring Entity까지 설계해보는 프로젝트.
+쿠팡의 DB를 관계 모델 부터 ER Diagram, 그리고 Spring Entity까지 설계해보는 프로젝트입니다. <br>
+
+**화면 보며 DB 테이블 분석하기 -> 관계 모델 그려보기 -> ER 다이어그램 그려보기 -> 엔티티 구현 -> 비즈니스 로직 구현 -> 화면 구현**
+
+<br>
+
+[테이블과 엔티티 설계에서 고민했던 점들 바로가기](#4-테이블과-엔티티를-설계하며-고민했던-부분들)
 
 ## 1. 쿠팡 Database 테이블 분석하기
 사진과 같은 쿠팡의 화면을 통해 간단하게 추정해본 도메인과 구성 필드들은 아래와 같습니다.
@@ -78,6 +84,7 @@ MySQL을 이용해 DB 설계를 공부하기 위한 프로젝트 <br>
 주소는 테이블로 들어가기 보다는 그냥 객체를 User에 넣어 주었다. 아마 엔티티를 개발 할 때는 객체가 풀어져서 들어갈 것 같다. <br>
 
 ## 4. 테이블과 엔티티를 설계하며 고민했던 부분들
+
 ### 4.1 엔티티와 테이블의 차이
 관련 강의나 학교에서 들은 수업으로는 차이를 명확하게 느끼지 못 했었다. <br>
 그러다 보니, 직접 짜는 과정에서 문제들이 발생했다. <br>
@@ -109,6 +116,8 @@ Order가 Product의 id를 가지고 있었는데, 이건 절대 일-대-다 관�
 
 (유저와 물품이 관계를 맺는다는 점과, 관계 모델, ER Diagram을 세세하게 짠다는 점이 강의와의 차별점이기는 하다 ㅠㅠ) <br>
 
+[comment]: <> (@XToOne&#40;OneToOne, ManyToOne&#41; 관계는 기본이 즉시로딩이므로 직접 지연로딩으로 설정해야 한다.)
+
 <details>
 <summary> <b>버리기 아까워서 올리는 실패한 설계들 모음</b> </summary>
 <img src="https://user-images.githubusercontent.com/71186266/201459524-88b060d5-8da7-49a0-865d-56450fb58d5a.jpg" width=60% alt=""> 
@@ -138,37 +147,44 @@ Order가 Product의 id를 가지고 있었는데, 이건 절대 일-대-다 관�
 @Getter
 @Setter
 public class User {
+      @Entity
+      @Getter
+      @Setter
+      public class User {
 
-    @Id
-    @GeneratedValue
-    @Column(name = "user_id")
-    private Long id;
+            @Id
+            @GeneratedValue
+            private Long id;
 
-    @NotEmpty private String name;
-    @NotEmpty private String email;
-    @NotEmpty private String contact;
-    @NotEmpty private String password;
+            @NotEmpty
+            private String name;
+            @NotEmpty
+            private String email;
+            @NotEmpty
+            private String contact;
+            @NotEmpty
+            private String password;
 
-    @Embedded
-    private Address address;
+            @Embedded
+            private Address address;
 
-    @Enumerated(EnumType.STRING)
-    private Membership membership;
+            @Enumerated(EnumType.STRING)
+            private Membership membership;
 
-    @OneToMany(mappedBy = "user")
-    private List<Product> sellingProducts = new ArrayList<>();
+            @OneToMany(mappedBy = "user")
+            private List<Product> sellingProducts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
-    private List<Order> orders = new ArrayList<>();
+            @OneToMany(mappedBy = "user")
+            private List<Order> orders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "buyer")
-    private List<Delivery> waitingDeliveries = new ArrayList<>();
+            @OneToMany(mappedBy = "buyer")
+            private List<Delivery> waitingDeliveries = new ArrayList<>();
 
-    @OneToMany(mappedBy = "seller")
-    private List<Delivery> sendDeliveries = new ArrayList<>();
+            @OneToMany(mappedBy = "seller")
+            private List<Delivery> sentDeliveries = new ArrayList<>();
+      }
 }
 ```
-1. 기본적으로 id는 PK로 해주었고, 이름을 "user_id"로 해주었다.
 2. 비어있으면 안 되는 정보들에 대해 `@NotEmpty`를 걸어 주었다.
 3. Address와 같은 요소는 따로 객체를 만들어서 `@Embedded` 해주었다.
 4. `@Enumerated`를 통해 맴버쉽 상태를 구현했다.
@@ -298,3 +314,5 @@ public class Delivery {
 
 [comment]: <> (연관관계 주인 다시 보기.)
 [comment]: <> (UUID랑 OrderItems를 도입해야 한다 ㅠㅠ)
+
+[comment]: <> (    @Column&#40;columnDefinition = "BINARY&#40;16&#41;"&#41;)
