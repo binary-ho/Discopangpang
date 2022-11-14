@@ -15,6 +15,10 @@ Database Systems 수업과 JPA 강의를 들으며, 이론적으로 학습한 �
 [테이블과 엔티티 설계에서 고민했던 점들 바로가기](#4-테이블과-엔티티를-설계하며-고민했던-부분들)
 
 ## 1. 쿠팡 Database 테이블 분석하기
+
+- <img src="https://user-images.githubusercontent.com/71186266/201606161-e6001856-f820-4bf6-be12-c9cdb9ba418d.jpg" width=60% alt=""> <img src="https://user-images.githubusercontent.com/71186266/201606166-f303bc3e-d337-4c20-b058-154eea567a96.jpg" width=60% alt="">
+
+
 사진과 같은 쿠팡의 화면을 통해 간단하게 추정해본 도메인과 구성 필드들은 아래와 같습니다.
 1. **회원**
 - 회원 번호
@@ -66,8 +70,8 @@ Database Systems 수업과 JPA 강의를 들으며, 이론적으로 학습한 �
 
 ## 2. 관계 모델 그려보기
 위에서 추측한 내용을 토대로 간략한 관계 모델을 그려보면 아래와 같습니다.
-![KakaoTalk_20221112_130438685_05](https://user-images.githubusercontent.com/71186266/201459483-44a21461-4dc3-42ce-af6f-5150d10415d7.jpg)
 
+![erd ver 3](https://user-images.githubusercontent.com/71186266/201605825-20fe821b-0ee6-47a6-9399-f460a8400e67.png)
 
 
 <br>
@@ -150,7 +154,13 @@ Order가 Product의 id를 가지고 있었는데, 이건 절대 일-대-다 관�
 
 - 이렇게 되면 주문 하나에 한 제품 밖에 참여 못 한다. 여러 제품이 참여할 수 있어야한다.
 
-<br>
+<br> <br>
+
+<img src="https://user-images.githubusercontent.com/71186266/201459483-44a21461-4dc3-42ce-af6f-5150d10415d7.jpg" width=60% alt="">
+
+
+- 1:1 관계 릴레이션에서 키를 서로 참조하면서 이행적 종속성이 생겨 제 3 정규형이 크게 깨진다. 
+- 그리고 서로를 참조하면서 주문이나 배송을 지울 수가 없게 되어버리는 이상한 상황이 벌어진다.
 
 </details>
 
