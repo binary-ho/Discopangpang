@@ -70,8 +70,7 @@ Database Systems 수업과 JPA 강의를 들으며, 이론적으로 학습한 �
 
 ## 2. 관계 모델 그려보기
 위에서 추측한 내용을 토대로 간략한 관계 모델을 그려보면 아래와 같습니다.
-
-![erd ver 3](https://user-images.githubusercontent.com/71186266/201605825-20fe821b-0ee6-47a6-9399-f460a8400e67.png)
+![KakaoTalk_20221112_130438685_05](https://user-images.githubusercontent.com/71186266/201459483-44a21461-4dc3-42ce-af6f-5150d10415d7.jpg)
 
 
 <br>
@@ -85,7 +84,8 @@ Database Systems 수업과 JPA 강의를 들으며, 이론적으로 학습한 �
 
 
 ## 3. ER Diagram 그려보기
-![discopangpangerd2](https://user-images.githubusercontent.com/71186266/201459771-43f1082d-97c9-461b-8105-2afa507ac02a.png)
+![erd ver 3](https://user-images.githubusercontent.com/71186266/201605825-20fe821b-0ee6-47a6-9399-f460a8400e67.png)
+
 
 <br>
 
@@ -156,7 +156,7 @@ Order가 Product의 id를 가지고 있었는데, 이건 절대 일-대-다 관�
 
 <br> <br>
 
-<img src="https://user-images.githubusercontent.com/71186266/201459483-44a21461-4dc3-42ce-af6f-5150d10415d7.jpg" width=60% alt="">
+<img src="https://user-images.githubusercontent.com/71186266/201459771-43f1082d-97c9-461b-8105-2afa507ac02a.png" width=60% alt="">
 
 
 - 1:1 관계 릴레이션에서 키를 서로 참조하면서 이행적 종속성이 생겨 제 3 정규형이 크게 깨진다. 

@@ -11,7 +11,8 @@
 
 <br> <br>
 
-![KakaoTalk_20221112_130438685_05](https://user-images.githubusercontent.com/71186266/201459483-44a21461-4dc3-42ce-af6f-5150d10415d7.jpg)
+
+![discopangpangerd2](https://user-images.githubusercontent.com/71186266/201459771-43f1082d-97c9-461b-8105-2afa507ac02a.png)
 
 - 1:1 관계 릴레이션에서 키를 서로 참조하면서 이행적 종속성이 생겨 제 3 정규형이 크게 깨진다.
 - 그리고 서로를 참조하면서 주문이나 배송을 지울 수가 없게 되어버리는 이상한 상황이 벌어진다.
