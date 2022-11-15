@@ -1,5 +1,8 @@
 package domain;
 
+import static javax.persistence.FetchType.LAZY;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,8 +22,8 @@ public class Delivery {
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")
+    @JsonIgnore
+    @OneToOne(mappedBy = "delivery", fetch = LAZY)
     private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
